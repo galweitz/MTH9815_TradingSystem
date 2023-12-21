@@ -110,12 +110,15 @@ int main()
 	RiskHistoricalDataService<Bond> bondRiskHistoricalDataService;
 	RiskHistoricalDataServiceConnector<Bond> bondRiskHistoricalDataServiceConnector = bondRiskHistoricalDataService.GetConnector();
 	RiskHistoricalDataServiceListener<Bond> bondRiskHistoricalDataServiceListener(&bondRiskHistoricalDataService);
+
 	std::vector<Bond> frontEndBonds = { CUSIP_to_BOND["91282CFX4"], CUSIP_to_BOND["91282CFW6"] };	// 2Y, 3Y
 	std::vector<Bond> bellyBonds = { CUSIP_to_BOND["91282CFZ9"], CUSIP_to_BOND["91282CFY2"], CUSIP_to_BOND["91282CFV8"] };	// 5Y, 7Y, 10Y
 	std::vector<Bond> longEndBonds = { CUSIP_to_BOND["912810TM0"], CUSIP_to_BOND["912810TL2"] };	// 20Y, 30Y
+
 	BucketedSector<Bond> frontEnd(frontEndBonds, "FrontEnd");
 	BucketedSector<Bond> belly(bellyBonds, "Belly");
 	BucketedSector<Bond> longEnd(longEndBonds, "LongEnd");
+    
 	bondRiskHistoricalDataService.AddBucketedSector(frontEnd);
 	bondRiskHistoricalDataService.AddBucketedSector(belly);
 	bondRiskHistoricalDataService.AddBucketedSector(longEnd);

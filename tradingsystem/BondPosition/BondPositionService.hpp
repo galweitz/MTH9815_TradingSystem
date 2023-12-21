@@ -6,27 +6,20 @@
 
 class BondPositionService : public PositionService<Bond>
 {
-public:
-	BondPositionService();
+	private:
+		std::map<std::string, Position<Bond>> positionMap;
+		std::vector<ServiceListener<Position<Bond>>*> listeners;
 
-	// get data on our service provided a key
-	virtual Position<Bond>& GetData(std::string key);
+	public:
+		BondPositionService();
+		virtual Position<Bond>& GetData(std::string key); // get data provided a key
+		virtual void OnMessage(Position<Bond>& data); // callback that a connector should invoke for any new or updated data
+		virtual void AddListener(ServiceListener<Position<Bond>>* listener); // add listener
 
-	// callback that a connector should invoke for any new or updated data
-	virtual void OnMessage(Position<Bond>& data);
+		virtual const vector< ServiceListener<Position<Bond>>*>& GetListeners() const;
 
-	// add a listener to the service for callbacks for data
-	virtual void AddListener(ServiceListener<Position<Bond>>* listener);
-
-	// get listeners on service
-	virtual const vector< ServiceListener<Position<Bond>>*>& GetListeners() const;
-
-	// add trade
-	virtual void AddTrade(Trade<Bond>& trade);
-
-private:
-	std::map<std::string, Position<Bond>> positionMap;
-	std::vector<ServiceListener<Position<Bond>>*> listeners;
+		// add trade
+		virtual void AddTrade(Trade<Bond>& trade);
 };
 
 // implementation 

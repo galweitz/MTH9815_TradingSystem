@@ -1,0 +1,41 @@
+# Ignore build output directories
+/build/
+/Release/
+/Debug/
+/x64/
+/Win32/
+/*.sln
+/*.suo
+/*.user
+/*.userprefs
+/*.aps
+/*.ncb
+/*.sdf
+/*.opensdf
+/*.unsuccessfulbuild
+/.vs/
+
+# Ignore object files, static and dynamic libs, and executables
+*.o
+*.obj
+*.exe
+*.lib
+*.so
+*.dll
+*.pdb
+*.ilk
+*.exp
+
+# Ignore CMake generated files
+/CMakeFiles/
+/CMakeCache.txt
+/*.cmake
+Makefile
+/CMakeLists.txt
+
+# Ignore Boost build directory if it's inside the project
+/boost_build/
+
+# Ignore other files that should not be in the repository
+.DS_Store
+Thumbs.db
