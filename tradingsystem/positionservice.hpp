@@ -36,6 +36,11 @@ public:
   // Get the aggregate position
   long GetAggregatePosition();
 
+  // Add position to a book
+  void AddPosition(string& book, long quantity);
+  
+  std::string str() const;
+
 private:
   T product;
   map<string,long> positions;
@@ -81,6 +86,42 @@ long Position<T>::GetAggregatePosition()
 {
   // No-op implementation - should be filled out for implementations
   return 0;
+}
+
+// add position to a book
+template<typename T>
+void Position<T>::AddPosition(string& book, long quantity)
+{
+    auto it = positions.find(book);
+    if (it != positions.end())
+    {
+        it->second += quantity;
+    }
+    else
+    {
+        positions.insert(std::pair<string, long>(book, quantity));
+    }
+}
+
+template <typename T>
+std::string Position<T>::str() const
+{
+    std::stringstream ss;
+    std::string id = product.GetProductId();
+    ss << id << ",{";
+
+    //position.GetAggregatePosition();
+    for (const auto& x : positions)
+    {
+        ss << x.first << ":" << x.second << ",";
+    }
+    std::string s = ss.str();
+    if (positions.size() > 0)
+    {
+        s = s.substr(0, s.size() - 1);
+    }
+    s += "}";
+    return s;
 }
 
 #endif

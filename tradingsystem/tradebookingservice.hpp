@@ -14,6 +14,21 @@
 // Trade sides
 enum Side { BUY, SELL };
 
+std::string SideToString(Side side)
+{
+    std::string result;
+    switch (side)
+    {
+    case BUY:
+        result = "BUY"; break;
+    case SELL:
+        result = "SELL"; break;
+    default:
+        result = ""; break;
+    }
+    return result;
+}
+
 /**
  * Trade object with a price, side, and quantity on a particular book.
  * Type T is the product type.

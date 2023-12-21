@@ -7,8 +7,11 @@
 #ifndef STREAMING_SERVICE_HPP
 #define STREAMING_SERVICE_HPP
 
+#include <string>
+#include <sstream>
 #include "soa.hpp"
 #include "marketdataservice.hpp"
+#include "pricingservice.hpp"
 
 /**
  * A price stream order with price and quantity (visible and hidden)
@@ -32,6 +35,8 @@ public:
 
   // Get the hidden quantity on this order
   long GetHiddenQuantity() const;
+
+  std::string str() const;
 
 private:
   double price;
@@ -63,6 +68,8 @@ public:
   // Get the offer order
   const PriceStreamOrder& GetOfferOrder() const;
 
+  std::string str() const;
+
 private:
   T product;
   PriceStreamOrder bidOrder;
@@ -82,9 +89,39 @@ class StreamingService : public Service<string,PriceStream <T> >
 public:
 
   // Publish two-way prices
-  void PublishPrice(const PriceStream<T>& priceStream) = 0;
+  virtual void PublishPrice(PriceStream<T>& priceStream) = 0;
 
 };
+
+
+template <typename T>
+class AlgoStream
+{
+  private:
+      PriceStream<T> priceStream;
+      static int numId;
+
+  public:
+      // param ctor
+      AlgoStream(PriceStream<T> _priceStream);
+
+      // get the price stream
+      PriceStream<T> GetPriceStream() const;
+
+      // update price stream
+      void UpdatePriceStream(const Price<T>& price);
+};
+
+
+template<typename T>
+class AlgoStreamingService : public Service<string, AlgoStream<T>>
+{
+  public:
+      // when listener gets a new Price
+      virtual void AddPrice(const Price<T>& price) = 0;
+};
+
+
 
 PriceStreamOrder::PriceStreamOrder(double _price, long _visibleQuantity, long _hiddenQuantity, PricingSide _side)
 {
@@ -94,43 +131,76 @@ PriceStreamOrder::PriceStreamOrder(double _price, long _visibleQuantity, long _h
   side = _side;
 }
 
-double PriceStreamOrder::GetPrice() const
-{
-  return price;
-}
+double PriceStreamOrder::GetPrice() const {return price;}
 
-long PriceStreamOrder::GetVisibleQuantity() const
-{
-  return visibleQuantity;
-}
+PricingSide PriceStreamOrder::GetSide() const {return side;}
 
-long PriceStreamOrder::GetHiddenQuantity() const
+long PriceStreamOrder::GetVisibleQuantity() const {return visibleQuantity;}
+
+long PriceStreamOrder::GetHiddenQuantity() const {return hiddenQuantity;}
+
+std::string PriceStreamOrder::str() const
 {
-  return hiddenQuantity;
+    std::stringstream ss;
+    ss << PricingSideToString(side) << "," << price << ",V" << visibleQuantity << ",H" << hiddenQuantity;
+    return ss.str();
 }
 
 template<typename T>
 PriceStream<T>::PriceStream(const T &_product, const PriceStreamOrder &_bidOrder, const PriceStreamOrder &_offerOrder) :
-  product(_product), bidOrder(_bidOrder), offerOrder(_offerOrder)
-{
-}
+  product(_product), bidOrder(_bidOrder), offerOrder(_offerOrder) {}
 
 template<typename T>
-const T& PriceStream<T>::GetProduct() const
-{
-  return product;
-}
+const T& PriceStream<T>::GetProduct() const {return product;}
 
 template<typename T>
-const PriceStreamOrder& PriceStream<T>::GetBidOrder() const
-{
-  return bidOrder;
-}
+const PriceStreamOrder& PriceStream<T>::GetBidOrder() const {return bidOrder;}
 
 template<typename T>
-const PriceStreamOrder& PriceStream<T>::GetOfferOrder() const
+const PriceStreamOrder& PriceStream<T>::GetOfferOrder() const {return offerOrder;}
+
+template<typename T>
+std::string PriceStream<T>::str() const
 {
-  return offerOrder;
+    std::stringstream ss;
+    std::string id = product.GetProductId();
+    ss << id << "," << "{Bid:" << bidOrder.str() << "},{Offer:" << offerOrder.str() << "}";
+    return ss.str();
+}
+
+template <typename T>
+int AlgoStream<T>::numId = 0;
+
+// param ctor
+template <typename T>
+AlgoStream<T>::AlgoStream(PriceStream<T> _priceStream) : priceStream(_priceStream) {}
+
+// get the price stream
+template <typename T>
+PriceStream<T> AlgoStream<T>::GetPriceStream() const {return priceStream;}
+
+// update price stream
+template <typename T>
+void AlgoStream<T>::UpdatePriceStream(const Price<T>& price)
+{
+    T product = price.GetProduct();
+
+    // check if same bond
+    if (priceStream.GetProduct().GetProductId() != product.GetProductId()) return;
+
+    double midPrice = price.GetMid();
+    double spread = price.GetBidOfferSpread();
+    double bidPrice = midPrice - spread * 0.5;
+    double offerPrice = midPrice + spread * 0.5;
+
+    long bidVisibleQuantity = (numId % 2 ? 1000000 : 2000000);
+    long offerVisibleQuantity = (numId % 2 ? 1000000 : 2000000);
+    long bidHiddenQuantity = 2 * bidVisibleQuantity;
+    long offerHiddenQuantity = 2 * offerVisibleQuantity;
+    PriceStreamOrder bidOrder(bidPrice, bidVisibleQuantity, bidHiddenQuantity, BID);
+    PriceStreamOrder offerOrder(offerPrice, offerVisibleQuantity, offerHiddenQuantity, OFFER);
+    priceStream = PriceStream<T>(product, bidOrder, offerOrder);
+    ++numId;
 }
 
 #endif

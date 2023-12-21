@@ -1,19 +1,12 @@
 #ifndef BOND_PRICING_SERVICE_CONNECTOR_HPP
 #define BOND_PRICING_SERVICE_CONNECTOR_HPP
 
-#include "soa.hpp"
-#include "products.hpp"
-#include "bondPricingService.hpp"
-#include "pricingservice.hpp"
+#include "BondPricingService.hpp"
 
-#include "utility.hpp"
-#include "bonds.hpp"
+#include "../utility.hpp"
+#include "../bonds.hpp"
 
 #include <fstream>
-#include <string>
-#include <iostream>
-
-using std::getline;
 
 class BondPricingServiceConnector : public Connector<Price<Bond>>
 {
@@ -29,6 +22,7 @@ class BondPricingServiceConnector : public Connector<Price<Bond>>
 // implementation 
 
 BondPricingServiceConnector::BondPricingServiceConnector(BondPricingService* _service): service(_service) {}
+
 void BondPricingServiceConnector::Publish(Price<Bond>& price) {}
 
 void BondPricingServiceConnector::Subscribe(std::string filePath)
@@ -42,16 +36,14 @@ void BondPricingServiceConnector::Subscribe(std::string filePath)
 	file.open(filePath);
 	if (!file)
 	{
-		std::cerr << "Error: file cannot be opened." << std::endl;
+		std::cerr << "Error: file cannot be opened.\n";
 	}
 
 	while (!file.eof())
 	{
-		file >> line; // sets EOF flag if no value found
-		info = tokenize(line, ','); //"{CUSIP},{to_string(digitsMid)},{to_string(digitsSpread)}\n"
-		CUSIP = info[0];
-		priceMidStr = info[1];
-		spreadStr = info[2];
+		file >> line;
+		info = tokenize(line, ',');
+		CUSIP = info[0]; priceMidStr = info[1]; spreadStr = info[2];
 
 		Bond product = CUSIP_to_BOND[CUSIP];
 		priceMid = StringToNum(priceMidStr);
@@ -59,11 +51,12 @@ void BondPricingServiceConnector::Subscribe(std::string filePath)
 
 		Price<Bond> price(product, priceMid, spread);
 
-		service->OnMessage(price); // tell BondPricingService
+		service->OnMessage(price);
 
 	}
+
 	file.close();
-	std::cout << "Finished reading file " << filePath << endl;
+	std::cout << "Finished reading file " << filePath << "\n";
 }
 
 #endif

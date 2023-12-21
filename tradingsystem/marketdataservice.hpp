@@ -16,6 +16,21 @@ using namespace std;
 // Side for market data
 enum PricingSide { BID, OFFER };
 
+std::string PricingSideToString(PricingSide pricingSide)
+{
+    std::string result;
+    switch (pricingSide)
+    {
+    case BID:
+        result = "BID"; break;
+    case OFFER:
+        result = "OFFER"; break;
+    default:
+        result = ""; break;
+    }
+    return result;
+}
+
 /**
  * A market data order with price, quantity, and side.
  */
@@ -35,6 +50,14 @@ public:
 
   // Get the side on the order
   PricingSide GetSide() const;
+
+  // added these operators
+
+  bool operator < (const Order& source) const;
+  bool operator > (const Order& source) const;
+  bool operator == (const Order& source) const;
+  bool operator <= (const Order& source) const;
+  bool operator >= (const Order& source) const;
 
 private:
   double price;
@@ -174,5 +197,11 @@ const vector<Order>& OrderBook<T>::GetOfferStack() const
 {
   return offerStack;
 }
+
+bool Order::operator < (const Order& source) const {return side == BID ? price < source.GetPrice() : price > source.GetPrice();}
+bool Order::operator > (const Order& source) const {return !(*this < source);}
+bool Order::operator == (const Order& source) const {return price == source.GetPrice();}
+bool Order::operator <= (const Order& source) const {return (*this < source) || (*this == source);}
+bool Order::operator >= (const Order& source) const {return (*this > source) || (*this == source);}
 
 #endif

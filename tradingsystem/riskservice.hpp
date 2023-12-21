@@ -32,6 +32,15 @@ public:
   // Get the quantity that this risk value is associated with
   long GetQuantity() const;
 
+  // Get the quantity that this risk value is associated with
+    long GetQuantity() const;
+
+  // Add quantity
+  void AddQuantity(long _quantity);
+
+  // return string form
+  std::string str() const;
+
 private:
   T product;
   double pv01;
@@ -58,6 +67,9 @@ public:
 
   // Get the name of the bucket
   const string& GetName() const;
+
+  // same as GetName()
+  std::string GetProductId() const;
 
 private:
   vector<T> products;
@@ -92,23 +104,39 @@ PV01<T>::PV01(const T &_product, double _pv01, long _quantity) :
   quantity = _quantity;
 }
 
+// implementation
+
 template<typename T>
-BucketedSector<T>::BucketedSector(const vector<T>& _products, string _name) :
-  products(_products)
+const T& PV01<T>::GetProduct() const {return product;}
+
+template<typename T>
+double PV01<T>::GetPV01() const {return pv01;}
+
+template<typename T>
+long PV01<T>::GetQuantity() const {return quantity;}
+
+template<typename T>
+void PV01<T>::AddQuantity(long _quantity) {quantity += _quantity;}
+
+template<typename T>
+std::string PV01<T>::str() const
 {
-  name = _name;
+    std::stringstream ss;
+    std::string id = product.GetProductId();
+    ss << id << ",(PV01)" << pv01 << "," << quantity;
+    return ss.str();
 }
 
 template<typename T>
-const vector<T>& BucketedSector<T>::GetProducts() const
-{
-  return products;
-}
+BucketedSector<T>::BucketedSector(const vector<T>& _products, string _name) : products(_products) {name = _name;}
 
 template<typename T>
-const string& BucketedSector<T>::GetName() const
-{
-  return name;
-}
+const vector<T>& BucketedSector<T>::GetProducts() const {return products;}
+
+template<typename T>
+const string& BucketedSector<T>::GetName() const {return name;}
+
+template<typename T>
+std::string BucketedSector<T>::GetProductId() const {return name;}
 
 #endif

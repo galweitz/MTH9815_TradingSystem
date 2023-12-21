@@ -44,6 +44,14 @@ public:
   // Get the current state on the inquiry
   InquiryState GetState() const;
 
+  // Set the current price on the inquiry
+  void SetPrice(double _price);
+
+  // Set the current state on the inquiry
+  void SetState(InquiryState _state);
+
+  std::string str() const;
+
 private:
   string inquiryId;
   T product;
@@ -120,4 +128,25 @@ InquiryState Inquiry<T>::GetState() const
   return state;
 }
 
+template<typename T>
+void Inquiry<T>::SetPrice(double _price)
+{
+    price = _price;
+}
+
+template<typename T>
+void Inquiry<T>::SetState(InquiryState _state)
+{
+    state = _state;
+}
+
+template<typename T>
+std::string Inquiry<T>::str() const
+{
+    std::stringstream ss;
+    std::string id = product.GetProductId();
+    ss << inquiryId << "," << id << "," << InquiryStateToString(state) << ","
+        << "," << SideToString(side) << "," << price << "," << quantity;
+    return ss.str();
+}
 #endif
