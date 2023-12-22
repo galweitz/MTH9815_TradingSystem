@@ -88,8 +88,6 @@ void BondInquiryService::OnMessage(Inquiry<Bond>& data)
 	default:
 		break;
 	}
-
-	
 }
 
 // implementation

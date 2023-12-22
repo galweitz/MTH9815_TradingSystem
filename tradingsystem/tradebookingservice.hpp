@@ -82,7 +82,7 @@ class TradeBookingService : public Service<string,Trade <T> >
 public:
 
   // Book the trade
-  void BookTrade(const Trade<T> &trade) = 0;
+  virtual void BookTrade(const Trade<T> &trade) = 0;
 
 };
 
@@ -133,9 +133,9 @@ Side Trade<T>::GetSide() const
   return side;
 }
 
-template<typename T>
-void TradeBookingService<T>::BookTrade(const Trade<T> &trade)
-{
-}
+// template<typename T>
+// void TradeBookingService<T>::BookTrade(const Trade<T> &trade)
+// {
+// }
 
 #endif

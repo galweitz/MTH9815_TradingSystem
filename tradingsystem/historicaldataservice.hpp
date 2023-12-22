@@ -22,7 +22,7 @@ class HistoricalDataService : Service<string,T>
 public:
 
   // Persist data to a store
-  void PersistData(string persistKey, const T& data) = 0;
+  virtual void PersistData(string persistKey, const T& data) = 0;
 
 };
 

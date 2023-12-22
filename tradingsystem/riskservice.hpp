@@ -32,9 +32,6 @@ public:
   // Get the quantity that this risk value is associated with
   long GetQuantity() const;
 
-  // Get the quantity that this risk value is associated with
-    long GetQuantity() const;
-
   // Add quantity
   void AddQuantity(long _quantity);
 
@@ -89,10 +86,10 @@ class RiskService : public Service<string,PV01 <T> >
 public:
 
   // Add a position that the service will risk
-  void AddPosition(Position<T> &position) = 0;
+  virtual void AddPosition(Position<T> &position) = 0;
 
   // Get the bucketed risk for the bucket sector
-  const PV01< BucketedSector<T> >& GetBucketedRisk(const BucketedSector<T> &sector) const = 0;
+  virtual const PV01< BucketedSector<T> >& GetBucketedRisk(const BucketedSector<T> &sector) const = 0;
 
 };
 

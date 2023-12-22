@@ -16,7 +16,7 @@ class BondTradeBookingService : public TradeBookingService<Bond>
         virtual void OnMessage(Trade<Bond>& data); // callback for any updated or new data
         virtual void AddListener(ServiceListener<Trade<Bond>>* listener); // add listener
         virtual const vector< ServiceListener<Trade<Bond>>*>& GetListeners() const; // get listeners
-        void BookTrade(Trade<Bond>& trade); // book a trade
+        virtual void BookTrade(const Trade<Bond>& trade) override; // book a trade
 };
 
 // implementation
@@ -31,7 +31,7 @@ void BondTradeBookingService::AddListener(ServiceListener<Trade<Bond>>* listener
 
 const vector<ServiceListener<Trade<Bond>>*>& BondTradeBookingService::GetListeners() const {return listeners;}
 
-void BondTradeBookingService::BookTrade(Trade<Bond>& trade)
+void BondTradeBookingService::BookTrade(const Trade<Bond>& trade)
 {
 	std::string id = trade.GetTradeId();
 	auto it = tradeMap.find(id);
@@ -43,7 +43,7 @@ void BondTradeBookingService::BookTrade(Trade<Bond>& trade)
 
 	for (auto& listener : listeners)
 	{
-		listener->ProcessAdd(trade);
+		listener->ProcessAdd(const_cast<Trade<Bond>&>(trade));
 	}
 }
 

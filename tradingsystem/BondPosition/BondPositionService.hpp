@@ -19,7 +19,7 @@ class BondPositionService : public PositionService<Bond>
 		virtual const vector< ServiceListener<Position<Bond>>*>& GetListeners() const;
 
 		// add trade
-		virtual void AddTrade(Trade<Bond>& trade);
+		void AddTrade(const Trade<Bond>& trade) override;
 };
 
 // implementation 
@@ -37,7 +37,7 @@ void BondPositionService::AddListener(ServiceListener<Position<Bond>>* listener)
 
 const vector<ServiceListener<Position<Bond>>*>& BondPositionService::GetListeners() const {return listeners;}
 
-void BondPositionService::AddTrade(Trade<Bond>& trade)
+void BondPositionService::AddTrade(const Trade<Bond>& trade)
 {
 	string book = trade.GetBook();
 	long quantity = trade.GetQuantity();

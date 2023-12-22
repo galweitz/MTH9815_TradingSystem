@@ -64,6 +64,7 @@ using boost::posix_time::microsec_clock;
 
 int main()
 {
+	std::cout << "Program Starting...\n";
 	//// STEP 1: CREATE ALL SERVICES, CONNECTORS, AND LISTENERS ******************************************************************************
 	BondAlgoExecutionService bondAlgoExecutionService;
 	BondAlgoExecutionServiceListener bondAlgoExecutionServiceListener(&bondAlgoExecutionService);

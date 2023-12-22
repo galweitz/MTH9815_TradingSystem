@@ -18,8 +18,8 @@ class BondMarketDataService : public MarketDataService<Bond>
         virtual void OnMessage(OrderBook<Bond>& data); // callback that a Connector should invoke for any new or updated data
         virtual void AddListener(ServiceListener<OrderBook<Bond>>* listener); // add a listener to service
         virtual const vector< ServiceListener<OrderBook<Bond>>*>& GetListeners() const; // get all listeners
-        virtual BidOffer GetBestBidOffer(const string& productId); // get best bid/offer
-        virtual OrderBook<Bond> AggregateDepth(const string& productId); // aggregate order book
+        BidOffer GetBestBidOffer(const string &productId) override; // get best bid/offer
+        OrderBook<Bond> AggregateDepth(const string &productId) override; // aggregate order book
 };
 
 // implementation
@@ -52,7 +52,7 @@ void BondMarketDataService::AddListener(ServiceListener<OrderBook<Bond>>* listen
 
 const vector< ServiceListener<OrderBook<Bond>>*>& BondMarketDataService::GetListeners() const {return listeners;}
 
-BidOffer BondMarketDataService::GetBestBidOffer(const string& productId)
+BidOffer BondMarketDataService::GetBestBidOffer(const string &productId)
 {
 	OrderBook<Bond> ob = marketdataMap.at(productId);
 	std::vector<Order> bids = ob.GetBidStack();
@@ -77,7 +77,7 @@ BidOffer BondMarketDataService::GetBestBidOffer(const string& productId)
 	return BidOffer(bestBid, bestOffer);
 }
 
-OrderBook<Bond> BondMarketDataService::AggregateDepth(const string& productId)
+OrderBook<Bond> BondMarketDataService::AggregateDepth(const string &productId)
 {
 	OrderBook<Bond> ob = marketdataMap.at(productId);
 	std::vector<Order> bids = ob.GetBidStack();

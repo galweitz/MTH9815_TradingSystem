@@ -13,6 +13,26 @@
 // Various inqyury states
 enum InquiryState { RECEIVED, QUOTED, DONE, REJECTED, CUSTOMER_REJECTED };
 
+std::string InquiryStateToString(InquiryState inquiryState)
+{
+    std::string s;
+    switch (inquiryState)
+    {
+    case RECEIVED:
+        s = "RECEIVED"; break;
+    case QUOTED:
+        s = "QUOTED"; break;
+    case DONE:
+        s = "DONE"; break;
+    case REJECTED:
+        s = "REJECTED"; break;
+    case CUSTOMER_REJECTED:
+        s = "CUSTOMER_REJECTED"; break;
+    default:
+        std::cerr << "Invalid Inquiry State." << std::endl; break;
+    }
+    return s;
+}
 /**
  * Inquiry object modeling a customer inquiry from a client.
  * Type T is the product type.
@@ -72,12 +92,11 @@ class InquiryService : public Service<string,Inquiry <T> >
 {
 
 public:
-
   // Send a quote back to the client
-  void SendQuote(const string &inquiryId, double price) = 0;
+  virtual void SendQuote(const string &inquiryId, double price) = 0;
 
   // Reject an inquiry from the client
-  void RejectInquiry(const string &inquiryId) = 0;
+  virtual void RejectInquiry(const string &inquiryId) = 0;
 
 };
 
@@ -149,4 +168,5 @@ std::string Inquiry<T>::str() const
         << "," << SideToString(side) << "," << price << "," << quantity;
     return ss.str();
 }
+
 #endif

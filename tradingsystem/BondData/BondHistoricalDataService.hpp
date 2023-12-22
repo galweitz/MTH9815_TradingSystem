@@ -32,7 +32,7 @@ class PositionHistoricalDataService : public HistoricalDataService<Position<T>>
 		virtual void OnMessage(Position<T>& data); // callback that a Connector should invoke for any new or updated data
 		virtual void AddListener(ServiceListener<Position<T>>* listener); // add listener
 		virtual const vector< ServiceListener<Position<T>>*>& GetListeners() const; // get all listeners
-		void PersistData(std::string persistKey, Position<T>& data); // Ppersist data to a store
+		void PersistData(std::string persistKey, const Position<T>& data) override; // persist data to a store
 };
 
 template <typename T>
@@ -53,9 +53,8 @@ class RiskHistoricalDataService : public HistoricalDataService<PV01<T>>
 		virtual const vector< ServiceListener<PV01<T>>*>& GetListeners() const; // get all listeners
 		virtual const PV01<BucketedSector<Bond>> GetBucketedRisk(const BucketedSector<Bond>& sector) const; // get bucketed risk for the bucket sector
 		virtual void AddBucketedSector(const BucketedSector<T>& sector); // record bucketed sectors risks
-		virtual void PersistData(std::string persistKey, PV01<T>& data); // persist data to a store
+		void PersistData(std::string persistKey, const PV01<T>& data) override; // persist data to a store
 };
-
 
 template <typename T>
 class ExecutionHistoricalDataService : public HistoricalDataService<ExecutionOrder<T>>
@@ -72,7 +71,7 @@ class ExecutionHistoricalDataService : public HistoricalDataService<ExecutionOrd
 		virtual void OnMessage(ExecutionOrder<T>& data);
 		virtual void AddListener(ServiceListener<ExecutionOrder<T>>* listener);
 		virtual const vector< ServiceListener<ExecutionOrder<T>>*>& GetListeners() const;
-		virtual void PersistData(std::string persistKey, ExecutionOrder<T>& data);
+		void PersistData(std::string persistKey, const ExecutionOrder<T>& data) override;
 };
 
 
@@ -91,7 +90,7 @@ class StreamingHistoricalDataService : public HistoricalDataService<PriceStream<
 		virtual void OnMessage(PriceStream<T>& data);
 		virtual void AddListener(ServiceListener<PriceStream<T>>* listener);
 		virtual const vector< ServiceListener<PriceStream<T>>*>& GetListeners() const;
-		void PersistData(std::string persistKey, PriceStream<T>& data);
+		void PersistData(std::string persistKey, const PriceStream<T>& data) override;
 };
 
 
@@ -110,7 +109,7 @@ class InquiryHistoricalDataService : public HistoricalDataService<Inquiry<T>>
 		virtual void OnMessage(Inquiry<T>& data);
 		virtual void AddListener(ServiceListener<Inquiry<T>>* listener);
 		virtual const vector< ServiceListener<Inquiry<T>>*>& GetListeners() const;
-		void PersistData(std::string persistKey, Inquiry<T>& data);
+		void PersistData(std::string persistKey, const Inquiry<T>& data) override;
 };
 
 // implementation
@@ -136,7 +135,7 @@ template <typename T>
 const vector< ServiceListener<Position<T>>*>& PositionHistoricalDataService<T>::GetListeners() const {return listeners;}
 
 template <typename T>
-void PositionHistoricalDataService<T>::PersistData(std::string persistKey, Position<T>& data)
+void PositionHistoricalDataService<T>::PersistData(std::string persistKey, const Position<T>& data)
 {
 	std::string id = data.GetProduct().GetProductId();
 	auto it = dataMap.find(id);
@@ -145,7 +144,7 @@ void PositionHistoricalDataService<T>::PersistData(std::string persistKey, Posit
 		dataMap.erase(id);
 	}
 	dataMap.insert(std::pair<std::string, Position<T>>(id, data));
-	connector->Publish(data);
+	connector->Publish(const_cast<Position<T>&>(data));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -195,7 +194,7 @@ template <typename T>
 void RiskHistoricalDataService<T>::AddBucketedSector(const BucketedSector<T>& sector) {sectors.push_back(sector);}
 
 template <typename T>
-void RiskHistoricalDataService<T>::PersistData(std::string persistKey, PV01<T>& data)
+void RiskHistoricalDataService<T>::PersistData(std::string persistKey, const PV01<T>& data)
 {
 	std::string id = data.GetProduct().GetProductId();
 	auto it = dataMap.find(id);
@@ -213,11 +212,11 @@ void RiskHistoricalDataService<T>::PersistData(std::string persistKey, PV01<T>& 
 		{
 			pv01s.push_back(this->GetBucketedRisk(sector));
 		}
-		connector->Publish(data, pv01s);
+		connector->Publish(const_cast<PV01<T>&>(data), pv01s);
 	}
 	else
 	{
-		connector->Publish(data);
+		connector->Publish(const_cast<PV01<T>&>(data));
 	}
 }
 
@@ -243,7 +242,7 @@ template <typename T>
 const vector< ServiceListener<ExecutionOrder<T>>*>& ExecutionHistoricalDataService<T>::GetListeners() const {return listeners;}
 
 template <typename T>
-void ExecutionHistoricalDataService<T>::PersistData(std::string persistKey, ExecutionOrder<T>& data)
+void ExecutionHistoricalDataService<T>::PersistData(std::string persistKey, const ExecutionOrder<T>& data)
 {
 	std::string id = data.GetProduct().GetProductId();
 	auto it = dataMap.find(id);
@@ -252,7 +251,7 @@ void ExecutionHistoricalDataService<T>::PersistData(std::string persistKey, Exec
 		dataMap.erase(id);
 	}
 	dataMap.insert(std::pair<std::string, ExecutionOrder<T>>(id, data));
-	connector->Publish(data);
+	connector->Publish(const_cast<ExecutionOrder<T>&>(data));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -277,7 +276,7 @@ template <typename T>
 const vector< ServiceListener<PriceStream<T>>*>& StreamingHistoricalDataService<T>::GetListeners() const {return listeners;}
 
 template <typename T>
-void StreamingHistoricalDataService<T>::PersistData(std::string persistKey, PriceStream<T>& data)
+void StreamingHistoricalDataService<T>::PersistData(std::string persistKey, const PriceStream<T>& data)
 {
 	std::string id = data.GetProduct().GetProductId();
 	auto it = dataMap.find(id);
@@ -286,7 +285,7 @@ void StreamingHistoricalDataService<T>::PersistData(std::string persistKey, Pric
 		dataMap.erase(id);
 	}
 	dataMap.insert(std::pair<std::string, PriceStream<T>>(id, data));
-	connector->Publish(data);
+	connector->Publish(const_cast<PriceStream<T>&>(data));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -312,7 +311,7 @@ const vector< ServiceListener<Inquiry<T>>*>& InquiryHistoricalDataService<T>::Ge
 
 // Persist data to a store
 template <typename T>
-void InquiryHistoricalDataService<T>::PersistData(std::string persistKey, Inquiry<T>& data)
+void InquiryHistoricalDataService<T>::PersistData(std::string persistKey, const Inquiry<T>& data)
 {
 	std::string id = data.GetInquiryId(); 
 	auto it = dataMap.find(id);
@@ -321,7 +320,7 @@ void InquiryHistoricalDataService<T>::PersistData(std::string persistKey, Inquir
 		dataMap.erase(id);
 	}
 	dataMap.insert(std::pair<std::string, Inquiry<T>>(id, data));
-	connector->Publish(data);
+	connector->Publish(const_cast<Inquiry<T>&>(data));
 }
 
 #endif

@@ -130,10 +130,10 @@ class MarketDataService : public Service<string,OrderBook <T> >
 public:
 
   // Get the best bid/offer order
-  virtual const BidOffer& GetBestBidOffer(const string &productId) = 0;
+  virtual BidOffer GetBestBidOffer(const string &productId) = 0;
 
   // Aggregate the order book
-  virtual const OrderBook<T>& AggregateDepth(const string &productId) = 0;
+  virtual OrderBook<T> AggregateDepth(const string &productId) = 0;
 
 };
 

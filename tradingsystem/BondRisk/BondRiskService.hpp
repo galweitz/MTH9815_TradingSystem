@@ -33,14 +33,12 @@ class BondRiskService : public RiskService<Bond>
 
     public:
         BondRiskService();
-
-        
         virtual PV01<Bond>& GetData(std::string key); // Get data given a key
         virtual void OnMessage(PV01<Bond>& data); // the callback that a Connector should invoke for any new or updated data
         virtual void AddListener(ServiceListener<PV01<Bond>>* listener); // add a listener
         virtual const vector< ServiceListener<PV01<Bond>>*>& GetListeners() const; // get all listeners
         virtual void AddPosition(Position<Bond>& position); // add position
-        virtual const PV01<BucketedSector<Bond>> GetBucketedRisk(const BucketedSector<Bond>& sector) const; // get bucketed risk for sector
+        virtual const PV01<BucketedSector<Bond>>& GetBucketedRisk(const BucketedSector<Bond>& sector) const; // get bucketed risk for sector
 };
 
 
@@ -79,7 +77,7 @@ void BondRiskService::AddPosition(Position<Bond>& position)
 }
 
 // Get the bucketed risk for the bucket sector
-const PV01<BucketedSector<Bond>> BondRiskService::GetBucketedRisk(const BucketedSector<Bond>& sector) const
+const PV01<BucketedSector<Bond>>& BondRiskService::GetBucketedRisk(const BucketedSector<Bond>& sector) const
 {
 	double pv01;
 	long quantity;

@@ -17,7 +17,7 @@ class BondTradeBookingServiceConnector : public Connector<Trade<Bond>>
 	    BondTradeBookingService* service;   
     public:
         BondTradeBookingServiceConnector(BondTradeBookingService* _service);
-        virtual void Publish(Connector<Bond>& trade);
+        void Publish(Trade<Bond>& trade) override;
         virtual void Subscribe(std::string filePath);
 };
 
@@ -26,7 +26,7 @@ class BondTradeBookingServiceConnector : public Connector<Trade<Bond>>
 
 BondTradeBookingServiceConnector::BondTradeBookingServiceConnector(BondTradeBookingService* _service) : service(_service) {}
 
-void BondTradeBookingServiceConnector::Publish(Connector<Bond>& trade) {}
+void BondTradeBookingServiceConnector::Publish(Trade<Bond>& trade) {}
 
 void BondTradeBookingServiceConnector::Subscribe(std::string filePath)
 {
