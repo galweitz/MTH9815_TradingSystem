@@ -65,49 +65,63 @@ using boost::posix_time::microsec_clock;
 int main()
 {
 	std::cout << "Program Starting...\n";
-	//// STEP 1: CREATE ALL SERVICES, CONNECTORS, AND LISTENERS ******************************************************************************
+
+	// part 1: creating all services, their connectors and their listeners:
+
+	// algo execution
 	BondAlgoExecutionService bondAlgoExecutionService;
 	BondAlgoExecutionServiceListener bondAlgoExecutionServiceListener(&bondAlgoExecutionService);
 
+	// algo streaming
 	BondAlgoStreamingService bondAlgoStreamingService;
 	BondAlgoStreamingServiceListener bondAlgoStreamingServiceListener(&bondAlgoStreamingService);
 
+	// bond execution
 	BondExecutionService bondExecutionService;
 	BondExecutionServiceConnector bondExecutionServiceConnector = bondExecutionService.GetConnector();
 	BondExecutionServiceListener bondExecutionServiceListener(&bondExecutionService);
 
+	// GUI
 	BondGUIService bondGUIService;
 	BondGUIServiceConnector bondGUIServiceConnector = bondGUIService.GetConnector();
 	BondGUIServiceListener bondGUIServiceListener(&bondGUIService);
 
+	// bond inquiry
 	BondInquiryService bondInquiryService;
 	BondInquiryServiceConnector bondInquiryServiceConnector = bondInquiryService.GetConnector();
 
+	// bond market data
 	BondMarketDataService bondMarketDataService;
 	BondMarketDataServiceConnector bondMarketDataServiceConnector(&bondMarketDataService);
 
+	// bond position
 	BondPositionService bondPositionService;
 	BondPositionServiceListener bondPositionServiceListener(&bondPositionService);
 
+	// bond pricing
 	BondPricingService bondPricingService;
 	BondPricingServiceConnector bondPricingServiceConnector(&bondPricingService);
 
+	// bond risk
 	BondRiskService bondRiskService;
 	BondRiskServiceListener bondRiskServiceListener(&bondRiskService);
 
+	// bond streaming
 	BondStreamingService bondStreamingService;
 	BondStreamingServiceConnector bondStreamingServiceConnector = bondStreamingService.GetConnector();
 	BondStreamingServiceListener bondStreamingServiceListener(&bondStreamingService);
 
+	// bond trading
 	BondTradeBookingService bondTradeBookingService;
 	BondTradeBookingServiceConnector bondTradeBookingServiceConnector(&bondTradeBookingService);
 	BondTradeBookingServiceListener bondTradeBookingServiceListener(&bondTradeBookingService);
 
-	// the following HistoricalDataService classes are generic
+	// position historical data
 	PositionHistoricalDataService<Bond> bondPositionHistoricalDataService;
 	PositionHistoricalDataServiceConnector<Bond> bondPositionHistoricalDataServiceConnector = bondPositionHistoricalDataService.GetConnector();
 	PositionHistoricalDataServiceListener<Bond> bondPositionHistoricalDataServiceListener(&bondPositionHistoricalDataService);
 
+	// risk historical data
 	RiskHistoricalDataService<Bond> bondRiskHistoricalDataService;
 	RiskHistoricalDataServiceConnector<Bond> bondRiskHistoricalDataServiceConnector = bondRiskHistoricalDataService.GetConnector();
 	RiskHistoricalDataServiceListener<Bond> bondRiskHistoricalDataServiceListener(&bondRiskHistoricalDataService);
@@ -124,41 +138,39 @@ int main()
 	bondRiskHistoricalDataService.AddBucketedSector(belly);
 	bondRiskHistoricalDataService.AddBucketedSector(longEnd);
 
-
+	// execution historiocal data
 	ExecutionHistoricalDataService<Bond> bondExecutionHistoricalDataService;
 	ExecutionHistoricalDataServiceConnector<Bond> bondExecutionHistoricalDataServiceConnector = bondExecutionHistoricalDataService.GetConnector();
 	ExecutionHistoricalDataServiceListener<Bond> bondExecutionHistoricalDataServiceListener(&bondExecutionHistoricalDataService);
 
+	// streaming historical data
 	StreamingHistoricalDataService<Bond> bondStreamingHistoricalDataService;
 	StreamingHistoricalDataServiceConnector<Bond> bondStreamingHistoricalDataServiceConnector = bondStreamingHistoricalDataService.GetConnector();
 	StreamingHistoricalDataServiceListener<Bond> bondStreamingHistoricalDataServiceListener(&bondStreamingHistoricalDataService);
 
+	// inquiry historical data
 	InquiryHistoricalDataService<Bond> bondInquiryHistoricalDataService;
 	InquiryHistoricalDataServiceConnector<Bond> bondInquiryHistoricalDataServiceConnector = bondInquiryHistoricalDataService.GetConnector();
 	InquiryHistoricalDataServiceListener<Bond> bondInquiryHistoricalDataServiceListener(&bondInquiryHistoricalDataService);
 
-	////STEP 2: REGISTER THE LISTENERS ON THE CORRESPONDING SERVICES ******************************************************************************
-	// in the order of the instructions
-	bondTradeBookingService.AddListener(&bondPositionServiceListener);//
-	bondPositionService.AddListener(&bondRiskServiceListener);//
-	bondMarketDataService.AddListener(&bondAlgoExecutionServiceListener);//
-	bondAlgoExecutionService.AddListener(&bondExecutionServiceListener);//
-	bondPricingService.AddListener(&bondAlgoStreamingServiceListener);//
-	bondAlgoStreamingService.AddListener(&bondStreamingServiceListener);//
-	bondPricingService.AddListener(&bondGUIServiceListener);// // only call bondGUIService.OnMessage() 100 times
-	bondExecutionService.AddListener(&bondTradeBookingServiceListener);//
-	bondPositionService.AddListener(&bondPositionHistoricalDataServiceListener);//
-	bondRiskService.AddListener(&bondRiskHistoricalDataServiceListener);//
-	bondExecutionService.AddListener(&bondExecutionHistoricalDataServiceListener);//
-	bondStreamingService.AddListener(&bondStreamingHistoricalDataServiceListener);//
-	bondInquiryService.AddListener(&bondInquiryHistoricalDataServiceListener);//
-	// output files of this program:
-	// gui.txt, positions.txt, risk.txt, executions.txt, streaming.txt, allinquiries.txt
+	// part 2: registering the listeners on the corresponding services:
 
+	bondTradeBookingService.AddListener(&bondPositionServiceListener);
+	bondPositionService.AddListener(&bondRiskServiceListener);
+	bondMarketDataService.AddListener(&bondAlgoExecutionServiceListener);
+	bondAlgoExecutionService.AddListener(&bondExecutionServiceListener);
+	bondPricingService.AddListener(&bondAlgoStreamingServiceListener);
+	bondAlgoStreamingService.AddListener(&bondStreamingServiceListener);
+	bondPricingService.AddListener(&bondGUIServiceListener);
+	bondExecutionService.AddListener(&bondTradeBookingServiceListener);
+	bondPositionService.AddListener(&bondPositionHistoricalDataServiceListener);
+	bondRiskService.AddListener(&bondRiskHistoricalDataServiceListener);
+	bondExecutionService.AddListener(&bondExecutionHistoricalDataServiceListener);
+	bondStreamingService.AddListener(&bondStreamingHistoricalDataServiceListener);
+	bondInquiryService.AddListener(&bondInquiryHistoricalDataServiceListener);
 
+	// step 3: subscribe the connectors to the input .txt files
 
-	////// STEP3: LET THE CONNECTORS SUBSCRIBE TO .TXT FILES ******************************************************************************
-	// in order of the instructions
 	ptime t0 = microsec_clock::local_time();
 	bondPricingServiceConnector.Subscribe("prices.txt");
 	ptime t1 = microsec_clock::local_time();
@@ -169,12 +181,11 @@ int main()
 	bondInquiryServiceConnector.Subscribe("inquiries.txt");
 	ptime t4 = microsec_clock::local_time();
 
-	std::cout << "Time used for BondPricingServiceConnector.Subscribe(): " << t1 - t0 << std::endl;
-	std::cout << "Time used for BondTradeBookingServiceConnector.Subscribe(): " << t2 - t1 << std::endl;
-	std::cout << "Time used for BondMarketDataServiceConnector.Subscribe(): " << t3 - t2 << std::endl;
-	std::cout << "Time used for BondInquiryServiceConnector.Subscribe(): " << t4 - t3 << std::endl;
+	std::cout << "Time used for bondPricingServiceConnector.Subscribe(): " << t1 - t0 << std::endl;
+	std::cout << "Time used for bondTradeBookingServiceConnector.Subscribe(): " << t2 - t1 << std::endl;
+	std::cout << "Time used for bondMarketDataServiceConnector.Subscribe(): " << t3 - t2 << std::endl;
+	std::cout << "Time used for bondInquiryServiceConnector.Subscribe(): " << t4 - t3 << std::endl;
 	std::cout << "Total time used: " << t4 - t0 << std::endl;
-
 
 	std::cout << "Program finished. Press Enter to exit..." << std::endl;
 	std::cin.get();	// pause the program after it finishes
