@@ -52,16 +52,6 @@ using boost::posix_time::ptime;
 using boost::posix_time::time_duration;
 using boost::posix_time::microsec_clock;
 
-//CUSIP     Maturity    Coupon  PV01
-//91282CFX4�11/30/2024��4.500 � 0.01879
-//91282CFW6�11/15/2025 �4.500�� 0.02761
-//91282CFZ9�11/30/2027 �3.875�� 0.04526
-//91282CFY2�11/30/2029 �3.875 � 0.06170
-//91282CFV8�11/15/2032��4.125 � 0.08598
-//912810TM0�11/15/2042 �4.000�� 0.14420
-//912810TL2�11/15/2052� 4.000   0.19917
-
-
 int main()
 {
 	std::cout << "Program Starting...\n";
