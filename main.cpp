@@ -1,4 +1,7 @@
 #include <iostream>
+#include <map>
+#include <vector>
+#include <string>
 
 #include "tradingsystem/BondAlgoExecution/BondAlgoExecutionService.hpp"
 #include "tradingsystem/BondAlgoExecution/BondAlgoExecutionServiceListener.hpp"
@@ -42,10 +45,6 @@
 #include "tradingsystem/streamingservice.hpp"
 #include "tradingsystem/tradebookingservice.hpp"
 #include "tradingsystem/utility.hpp"
-
-#include <map>
-#include <vector>
-#include <string>
 
 #include "boost/date_time/posix_time/posix_time.hpp"
 using boost::posix_time::ptime;
@@ -162,7 +161,7 @@ int main()
 	// step 3: subscribe the connectors to the input .txt files
 
 	ptime t0 = microsec_clock::local_time();
-	bondPricingServiceConnector.Subscribe("../prices.txt"); // location with respect to CMake  build file 
+	bondPricingServiceConnector.Subscribe("../prices.txt"); // location with respect to CMake build file 
 	ptime t1 = microsec_clock::local_time();
 	bondTradeBookingServiceConnector.Subscribe("../trades.txt");
 	ptime t2 = microsec_clock::local_time();
