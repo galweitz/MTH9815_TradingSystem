@@ -4,11 +4,18 @@ Gal Weitz Fall 2023
 ### Compiling and Running the Program ###
 
 Run the executable in a UNIX environment.
+- At project directory: make build directory and change to it.
+- Edit Boost path as detailed in CMakeLists.txt
+- Run command: cmake ..
+- Run command: make
+- Run command: ./TradingSystem
+Resulting .txt files will be found in the build directory.
 
 ### Overview ###
 
-This document describes the bond trading system developed for US Treasuries, covering securities ranging from 2Y to 30Y.
-The system is built in C++.
+This document describes the bond trading system developed for US Treasuries, covering securities ranging from 2Y to 30Y. While each service was
+was supposed to run as its own separate program, I did not know how to parallelize it and decided to demonstrate their connectivity and functionality
+by running them all sequentially.
 
 ### System Components ###
 
@@ -17,7 +24,7 @@ The system comprises several interconnected services, each managing specific asp
 - Bond Pricing, Trading, and Execution Services: Handle pricing updates, trade bookings, and execution of trades.
 - Bond Risk and Position Services: Manage risk calculations and position tracking.
 - Bond Market and Streaming Services: Process market data and manage streaming of prices.
-- Bond Inquiry and GUI Services: Handle customer inquiries and provide a graphical user interface for real-time data.
+- Bond Inquiry and GUI Services: Handle customer inquiries and provide a some graphical user interface for real-time data.
 - Bond Historical Data Services: Record historical data for various trading activities.
 
 ### Input Files: ###

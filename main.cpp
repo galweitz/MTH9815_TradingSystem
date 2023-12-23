@@ -162,13 +162,13 @@ int main()
 	// step 3: subscribe the connectors to the input .txt files
 
 	ptime t0 = microsec_clock::local_time();
-	bondPricingServiceConnector.Subscribe("prices.txt");
+	bondPricingServiceConnector.Subscribe("../prices.txt"); // location with respect to CMake  build file 
 	ptime t1 = microsec_clock::local_time();
-	bondTradeBookingServiceConnector.Subscribe("trades.txt");
+	bondTradeBookingServiceConnector.Subscribe("../trades.txt");
 	ptime t2 = microsec_clock::local_time();
-	bondMarketDataServiceConnector.Subscribe("marketdata.txt");
+	bondMarketDataServiceConnector.Subscribe("../marketdata.txt");
 	ptime t3 = microsec_clock::local_time();
-	bondInquiryServiceConnector.Subscribe("inquiries.txt");
+	bondInquiryServiceConnector.Subscribe("../inquiries.txt");
 	ptime t4 = microsec_clock::local_time();
 
 	std::cout << "Time used for bondPricingServiceConnector.Subscribe(): " << t1 - t0 << std::endl;
