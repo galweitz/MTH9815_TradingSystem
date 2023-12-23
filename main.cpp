@@ -173,20 +173,9 @@ int main()
 	bondExecutionService.AddListener(&bondExecutionHistoricalDataServiceListener);
 	bondStreamingService.AddListener(&bondStreamingHistoricalDataServiceListener);
 	bondInquiryService.AddListener(&bondInquiryHistoricalDataServiceListener);
-<<<<<<< HEAD
 
 	// step 3: subscribe the connectors to the input .txt files
 
-=======
-	
-	// output files:
-	// allinquiries.txt, executions.txt, gui.txt, positions.txt, risk.txt, streaming.txt
-
-
-
-	////// STEP3: LET THE CONNECTORS SUBSCRIBE TO .TXT FILES ******************************************************************************
-	// in order of the instructions
->>>>>>> 14b2a56a48720bff9252c9fc5472c75ea208ad19
 	ptime t0 = microsec_clock::local_time();
 	bondPricingServiceConnector.Subscribe("prices.txt");
 	ptime t1 = microsec_clock::local_time();
