@@ -139,21 +139,22 @@ int main()
 
 	////STEP 2: REGISTER THE LISTENERS ON THE CORRESPONDING SERVICES ******************************************************************************
 	// in the order of the instructions
-	bondTradeBookingService.AddListener(&bondPositionServiceListener);//
-	bondPositionService.AddListener(&bondRiskServiceListener);//
-	bondMarketDataService.AddListener(&bondAlgoExecutionServiceListener);//
-	bondAlgoExecutionService.AddListener(&bondExecutionServiceListener);//
-	bondPricingService.AddListener(&bondAlgoStreamingServiceListener);//
-	bondAlgoStreamingService.AddListener(&bondStreamingServiceListener);//
-	bondPricingService.AddListener(&bondGUIServiceListener);// // only call bondGUIService.OnMessage() 100 times
-	bondExecutionService.AddListener(&bondTradeBookingServiceListener);//
-	bondPositionService.AddListener(&bondPositionHistoricalDataServiceListener);//
-	bondRiskService.AddListener(&bondRiskHistoricalDataServiceListener);//
-	bondExecutionService.AddListener(&bondExecutionHistoricalDataServiceListener);//
-	bondStreamingService.AddListener(&bondStreamingHistoricalDataServiceListener);//
-	bondInquiryService.AddListener(&bondInquiryHistoricalDataServiceListener);//
-	// output files of this program:
-	// gui.txt, positions.txt, risk.txt, executions.txt, streaming.txt, allinquiries.txt
+	bondTradeBookingService.AddListener(&bondPositionServiceListener);
+	bondPositionService.AddListener(&bondRiskServiceListener);
+	bondMarketDataService.AddListener(&bondAlgoExecutionServiceListener);
+	bondAlgoExecutionService.AddListener(&bondExecutionServiceListener);
+	bondPricingService.AddListener(&bondAlgoStreamingServiceListener);
+	bondAlgoStreamingService.AddListener(&bondStreamingServiceListener);
+	bondPricingService.AddListener(&bondGUIServiceListener);
+	bondExecutionService.AddListener(&bondTradeBookingServiceListener);
+	bondPositionService.AddListener(&bondPositionHistoricalDataServiceListener);
+	bondRiskService.AddListener(&bondRiskHistoricalDataServiceListener);
+	bondExecutionService.AddListener(&bondExecutionHistoricalDataServiceListener);
+	bondStreamingService.AddListener(&bondStreamingHistoricalDataServiceListener);
+	bondInquiryService.AddListener(&bondInquiryHistoricalDataServiceListener);
+	
+	// output files:
+	// allinquiries.txt, executions.txt, gui.txt, positions.txt, risk.txt, streaming.txt
 
 
 
