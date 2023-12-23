@@ -6,8 +6,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Set the location of the Boost installation.
-set(BOOST_ROOT "C:/local/boost")
-find_package(Boost REQUIRED COMPONENTS date_time) # specify needed Boost components here
+set(BOOST_ROOT "C:/local/boost") # specify your Boost path here
+find_package(Boost REQUIRED COMPONENTS date_time) 
 
 # If you want to include Boost header files
 include_directories(${Boost_INCLUDE_DIRS})
