@@ -31,7 +31,6 @@
 /CMakeCache.txt
 /*.cmake
 Makefile
-/CMakeLists.txt
 
 # Ignore Boost build directory if it's inside the project
 /boost_build/
