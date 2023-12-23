@@ -14,8 +14,7 @@ Resulting .txt files will be found in the build directory.
 ### Overview ###
 
 This document describes the bond trading system developed for US Treasuries, covering securities ranging from 2Y to 30Y.
-While each service was supposed to run as its own separate program, I did not know how to parallelize it and decided to demonstrate their connectivity and functionality
-by running them all sequentially.
+While each service was supposed to run as its own separate program, I did not know how to parallelize it and decided to demonstrate their connectivity and functionality by running them all sequentially.
 
 ### System Components ###
 
