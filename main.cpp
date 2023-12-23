@@ -178,7 +178,7 @@ int main()
 	std::cout << "Total time used: " << t4 - t0 << std::endl;
 
 	std::cout << "Program finished. Press Enter to exit..." << std::endl;
-	std::cin.get();	// pause the program after it finishes
+	std::cin.get();	// user input to quit program
 
 	return 0;
 }
