@@ -153,13 +153,8 @@ int main()
 	InquiryHistoricalDataServiceConnector<Bond> bondInquiryHistoricalDataServiceConnector = bondInquiryHistoricalDataService.GetConnector();
 	InquiryHistoricalDataServiceListener<Bond> bondInquiryHistoricalDataServiceListener(&bondInquiryHistoricalDataService);
 
-<<<<<<< HEAD
 	// part 2: registering the listeners on the corresponding services:
 
-=======
-	////STEP 2: REGISTER THE LISTENERS ON THE CORRESPONDING SERVICES ******************************************************************************
-	// in the order of the instructions
->>>>>>> 14b2a56a48720bff9252c9fc5472c75ea208ad19
 	bondTradeBookingService.AddListener(&bondPositionServiceListener);
 	bondPositionService.AddListener(&bondRiskServiceListener);
 	bondMarketDataService.AddListener(&bondAlgoExecutionServiceListener);
